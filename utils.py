@@ -23,3 +23,19 @@ def matrix_row_wise_dot_product(A, B):
     """
     assert A.shape == B.shape
     return np.einsum('ij,ij->i', A, B)  # r_i = SUM_j[A_ij * B_ij]
+
+def read_calib_file(filepath):
+    """Read in a calibration file and parse into a dictionary."""
+    data = {}
+
+    with open(filepath, 'r') as f:
+        for line in f.readlines():
+            key, value = line.split(':', 1)
+            # The only non-float values in these files are dates, which
+            # we don't care about anyway
+            try:
+                data[key] = np.array([float(x) for x in value.split()])
+            except ValueError:
+                pass
+
+    return data
